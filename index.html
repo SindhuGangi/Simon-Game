@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Keypress Auto Button Click</title>
+  <style>
+    body {
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      align-content: center;
+      justify-items: center;
+
+    }
+
+    h1 {
+      font-family: Luminari, fantasy;
+      font-style: italic;
+      font-size: 40px;
+    }
+
+    .pressed {
+      background-color: azure !important;
+
+    }
+
+    .container {
+      padding: 40px;
+      border: 3px solid purple;
+      display: grid;
+      grid-template-rows: 50% 50%;
+      grid-template-columns: 200px 200px;
+      justify-items: center;
+      align-items: center;
+      row-gap: 25px;
+      column-gap: 25px;
+      position: relative;
+    }
+
+    button {
+      height: 200px;
+      width: 200px;
+      border: none;
+      font: 100px cursive;
+      color: white;
+      border-radius: 10px;
+
+
+
+    }
+
+    .colorPress {
+      background-color: blue;
+
+    }
+
+    .red {
+      background-color: red;
+    }
+
+    .warning {
+      background-color: burlywood;
+    }
+
+    .blue {
+      background-color: blue;
+    }
+
+    .yellow {
+      background-color: rgb(243, 243, 11);
+    }
+
+    .green {
+      background-color: green;
+    }
+
+    #circle {
+      position: absolute;
+      top: 45%;
+      height: 70px;
+      width: 70px;
+      background-color: black;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Welcome to Simon Game! Press any Key to Start</h1>
+
+  <div class=container>
+    <div> <button id='red' class="red btn">1</button></div>
+    <div> <button id='blue' class="blue btn">2</button></div>
+    <button id="circle"></button>
+    <div> <button id='yellow' class="yellow btn">3</button></div>
+    <div> <button id='green' class="green btn">4</button></div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    let gamePattern = [];
+    let userCHosenPattern = [];
+    let arr = ['red', 'blue', 'yellow', 'green'];
+    let length = arr.length;
+    let start = false;
+    let level = 1;
+    $(document).keypress(function () {
+      if (!start) {
+        start = true;
+        nextSequence();
+      }
+    });
+    function nextSequence() {
+      let randomIndex = Math.floor(Math.random() * length);
+      let randomColor = arr[randomIndex];
+      $("h1").text("Level " + level);
+      level++;
+      gamePattern.push(randomColor);
+      animateof(randomColor);
+    }
+    function animateof(name) {
+      $('#' + name).fadeOut(100).fadeIn(100);
+    }
+    $('.btn').click(function () {
+      let userColor = $(this).attr("id");
+      console.log(userColor);
+      $('#' + userColor).addClass("pressed");
+      setTimeout(function () {
+        $('#' + userColor).removeClass("pressed");
+      }, 100);
+      userCHosenPattern.push(userColor);
+      userCheckAnswer(userCHosenPattern.length - 1);
+
+    });
+    function userCheckAnswer(currentIndex) {
+      if (userCHosenPattern[currentIndex] === gamePattern[currentIndex]) {
+        if (userCHosenPattern.length === gamePattern.length) {
+          setTimeout(nextSequence, 1000);
+          userCHosenPattern = [];
+        }
+      } else if ((gamePattern.length === 0) || userCHosenPattern[currentIndex] != gamePattern[currentIndex]) {
+        $("h1").text("Alert!!! Game Over ReStart Again by pressing any Key ");
+        $("body").addClass("warning");
+        setTimeout(function () {
+          $("body").removeClass("warning");
+        }, 400);
+        startOver();
+
+      }
+    }
+    function startOver() {
+      start = false;
+      gamePattern = [];
+      userCHosenPattern = [];
+
+    }
+
+
+  </script>
+
+</body>
+
+</html>
